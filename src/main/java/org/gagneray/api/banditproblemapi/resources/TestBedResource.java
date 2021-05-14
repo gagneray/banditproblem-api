@@ -3,7 +3,8 @@ package org.gagneray.api.banditproblemapi.resources;
 
 import org.gagneray.api.banditproblemapi.services.TestBedService;
 import org.gagneray.rl.banditproblem.dto.TestBedConfigurationDTO;
-import org.gagneray.rl.banditproblem.services.BanditProblemTestBed;
+import org.gagneray.rl.banditproblem.services.BanditProblemTestBed.TestBedResultDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,8 @@ public class TestBedResource {
     }
 
     @GetMapping("/testbed")
-    public BanditProblemTestBed processTestBed(@RequestBody @NonNull TestBedConfigurationDTO testBedConfigurationDTO) {
-        return testBedService.processTestBed(testBedConfigurationDTO);
+    public ResponseEntity<TestBedResultDTO> processTestBed(@RequestBody @NonNull TestBedConfigurationDTO testBedConfigurationDTO) {
+        return ResponseEntity.ok(testBedService.processTestBed(testBedConfigurationDTO));
     }
 
 }
