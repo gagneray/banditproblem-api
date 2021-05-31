@@ -2,6 +2,8 @@ package org.gagneray.api.banditproblemapi.validation;
 
 import org.gagneray.api.banditproblemapi.configuration.TestBedProperties;
 import org.gagneray.rl.banditproblem.dto.TestBedConfigurationDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 @Component
 public class TestBedConfigurationValidator implements Validator {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(TestBedConfigurationValidator.class);
     public static String OBJECT_NAME = "TestBedConfigurationDTO";
 
     private final TestBedProperties testBedProperties;
@@ -34,7 +37,7 @@ public class TestBedConfigurationValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         TestBedConfigurationDTO testBedConfigurationDTO = (TestBedConfigurationDTO) o;
-
+        LOGGER.info("Validate object, restricted access : {}", restricted);
         if (restricted) {
             onPropertiesValidation(testBedConfigurationDTO, errors);
         } else {
