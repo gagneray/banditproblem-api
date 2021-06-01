@@ -1,6 +1,6 @@
 package org.gagneray.api.banditproblemapi.services;
 
-import org.gagneray.api.banditproblemapi.validation.TestBedConfigurationValidator;
+import org.gagneray.api.banditproblemapi.validation.ConfigurationValidatorAdapter;
 import org.gagneray.rl.banditproblem.configurations.TestBedConfiguration;
 import org.gagneray.rl.banditproblem.dto.TestBedConfigurationDTO;
 import org.gagneray.rl.banditproblem.services.BanditProblemTestBed;
@@ -13,21 +13,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.MapBindingResult;
 
-import java.util.HashMap;
-
 @Service
 public class TestBedService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TestBedService.class);
 
-    private final TestBedConfigurationValidator validator;
+    private final ConfigurationValidatorAdapter validator;
 
-    public TestBedService(TestBedConfigurationValidator validator) {
-        this.validator = validator;
+    public TestBedService(ConfigurationValidatorAdapter validatorAdapter) {
+        this.validator = validatorAdapter;
     }
 
     public TestBedResultDTO processTestBed(TestBedConfigurationDTO testBedConfigurationDTO) {
-
+        LOGGER.info("Processing testbed configuration");
         TestBedConfiguration testBedConfiguration = new TestBedConfiguration(testBedConfigurationDTO);
         BanditProblemTestBed testBed = new BanditProblemTestBed(testBedConfiguration);
         testBed.process();
@@ -35,14 +33,8 @@ public class TestBedService {
     }
 
     public MapBindingResult validateTestBedConfiguration(TestBedConfigurationDTO testBedConfigurationDTO) {
-
         LOGGER.info("Validating testbed configuration");
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        validator.restricted(authentication instanceof AnonymousAuthenticationToken);
-
-        MapBindingResult errors = new MapBindingResult(new HashMap<>(), TestBedConfigurationValidator.OBJECT_NAME);
-        validator.validate(testBedConfigurationDTO, errors);
-        return errors;
+        return validator.validate(testBedConfigurationDTO, authentication instanceof AnonymousAuthenticationToken);
     }
 }
