@@ -14,7 +14,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/testbed")
+                .antMatchers("/api/banditproblem/**")
                 .permitAll()
 
                 //default spring security config

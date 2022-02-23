@@ -12,9 +12,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/banditproblem")
 public class TestBedResource {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TestBedResource.class);
