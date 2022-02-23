@@ -10,7 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,8 @@ public class TestBedResource {
         this.testBedService = testBedService;
     }
 
-    @GetMapping("/testbed")
+    @CrossOrigin
+    @PostMapping("/testbed")
     public ResponseEntity<Object> processTestBed(@RequestBody @NonNull TestBedConfigurationDTO testBedConfigurationDTO) {
         LOGGER.info("Received call for testbed processing with configuration {}", testBedConfigurationDTO);
         Errors errors = testBedService.validateTestBedConfiguration(testBedConfigurationDTO);
