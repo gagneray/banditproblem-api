@@ -1,6 +1,7 @@
 package org.gagneray.api.banditproblemapi.resources;
 
 
+import org.gagneray.api.banditproblemapi.dto.TestBedResultExtendedDTO;
 import org.gagneray.api.banditproblemapi.services.TestBedService;
 import org.gagneray.rl.banditproblem.dto.TestBedConfigurationDTO;
 import org.slf4j.Logger;
@@ -30,18 +31,22 @@ public class TestBedResource {
 
     @CrossOrigin
     @PostMapping("/testbed")
-    public ResponseEntity<Object> processTestBed(@RequestBody @NonNull TestBedConfigurationDTO testBedConfigurationDTO) {
+    public ResponseEntity<TestBedResultExtendedDTO> processTestBed(@RequestBody @NonNull TestBedConfigurationDTO testBedConfigurationDTO) {
         LOGGER.info("Received call for testbed processing with configuration {}", testBedConfigurationDTO);
         Errors errors = testBedService.validateTestBedConfiguration(testBedConfigurationDTO);
+
+        TestBedResultExtendedDTO testBedResultValidationDTO = new TestBedResultExtendedDTO();
+        testBedResultValidationDTO.setValidationErrors(errors.getAllErrors());
 
         if (errors.hasErrors()) {
             LOGGER.info("Configuration Not Valid");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(errors.getAllErrors());
+                    .body(testBedResultValidationDTO);
         }
 
         LOGGER.info("Configuration validated");
-        return ResponseEntity.ok(testBedService.processTestBed(testBedConfigurationDTO));
+        testBedResultValidationDTO.setTestBedResult(testBedService.processTestBed(testBedConfigurationDTO));
+        return ResponseEntity.ok(testBedResultValidationDTO);
     }
 }
